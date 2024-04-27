@@ -11,7 +11,7 @@ const checkIsWebhookCorrect = (
   const isAvailable = availableHooks.includes(webhookTopic);
 
   if (!isAvailable) {
-    res.status(500).send('Incorrect hook passed!');
+    res.status(500).json({ message: 'Incorrect hook passed' });
   } else {
     next();
   }

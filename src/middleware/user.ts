@@ -9,7 +9,7 @@ const checkUserExistance = async (
   const uuid = req.params.uuid;
   const exists = Boolean(await UserModel.exists({ uuid }));
   if (exists) {
-    res.status(500).send('Uuid already exists!');
+    res.status(500).json({ message: 'Uuid already exists!' });
   } else {
     next();
   }
@@ -26,9 +26,9 @@ const checkUserAvailability = async (
     .lean();
 
   if (!foundUser) {
-    res.status(404).json({ message: 'User not found!' });
+    res.status(404).json({ message: 'User not found' });
   } else if (foundUser.isBlocked) {
-    res.status(500).json({ message: 'User is blocked!' });
+    res.status(500).json({ message: 'User is blocked' });
   } else {
     next();
   }

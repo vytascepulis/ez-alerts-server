@@ -21,7 +21,7 @@ router.post(
       shopDomain: req.body.shopDomain,
     });
 
-    const newFile = createNewFile({ uuid: req.params.uuid });
+    const newFile = createNewFile({ uuid: req.body.uuid });
 
     try {
       await newUser.save();

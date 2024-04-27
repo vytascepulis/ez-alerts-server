@@ -1,7 +1,12 @@
 import express, { Request, Response } from 'express';
 import { IUser, UserModel } from '../models/user';
+import { FileModel } from '../models/file';
 
 const router = express.Router();
+
+interface BlockRequest<T> extends Request {
+  body: T;
+}
 
 router.get('/users', async (req: Request, res: Response) => {
   try {
@@ -19,8 +24,9 @@ router.delete(
 
     try {
       const deletedUser = await UserModel.findOneAndDelete({ uuid });
+      const deletedFiles = await FileModel.findOneAndDelete({ uuid });
 
-      if (deletedUser) {
+      if (deletedUser && deletedFiles) {
         res.status(200).json({ message: 'User deleted' });
       } else {
         res.status(500).json({ message: 'Could not delete user' });
@@ -32,8 +38,15 @@ router.delete(
 );
 
 router.post(
-  '/users/:uuid',
-  async (req: Request<{ uuid: string }, IUser, IUser>, res: Response) => {
+  '/users/:uuid/block',
+  async (
+    req: Request<
+      { uuid: string },
+      { isBlocked: boolean },
+      { isBlocked: boolean }
+    >,
+    res: Response,
+  ) => {
     const uuid = req.params.uuid;
     const body = req.body;
     try {
@@ -41,30 +54,15 @@ router.post(
         { uuid },
         {
           isBlocked: body.isBlocked,
-          settings: {
-            text: {
-              content: body.settings.text.content,
-              specialColor: body.settings.text.specialColor,
-            },
-            display: {
-              duration: body.settings.display.duration,
-              animationIn: body.settings.display.animationIn,
-              animationOut: body.settings.display.animationOut,
-            },
-            audio: {
-              volume: body.settings.audio.volume,
-              base64: body.settings.audio.base64,
-            },
-            image: {
-              base64: body.settings.image.base64,
-            },
-            useProductImages: body.settings.useProductImages,
-          },
         },
       );
 
       if (updatedUser) {
-        res.status(200).json({ message: 'User updated' });
+        res
+          .status(200)
+          .json({
+            message: `User ${body.isBlocked ? 'blocked' : 'unblocked'}`,
+          });
       } else {
         res.status(500).json({ message: 'Could not update user' });
       }

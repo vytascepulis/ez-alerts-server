@@ -13,7 +13,7 @@ const router = express.Router();
 type ISettings = IUser['settings'];
 
 router.get(
-  '/:uuid/settings',
+  '/settings/:uuid',
   checkUserAvailability,
   async (req: Request, res: Response) => {
     const uuid = req.params.uuid;
@@ -30,7 +30,7 @@ router.get(
 );
 
 router.get(
-  '/:uuid/settings-full',
+  '/settings-full/:uuid',
   checkUserAvailability,
   async (req: Request, res: Response) => {
     const uuid = req.params.uuid;
@@ -47,7 +47,7 @@ router.get(
 );
 
 router.put(
-  '/:uuid/settings',
+  '/settings/:uuid',
   checkUserAvailability,
   async (
     req: Request<{ uuid: string }, ISettings, ISettings>,
@@ -77,16 +77,16 @@ router.put(
             formattedSettings.text.specialColor,
             formattedSettings.audio,
           );
-
-          res.send('ok');
-        } else {
-          res.status(500).send(`Couldn't find client ${uuid}`);
         }
+
+        res.status(200).json({ message: 'User settings updated successfully' });
       } else {
-        res.status(500).send(`Could not update settings: ${foundUser}`);
+        res
+          .status(500)
+          .json({ message: `Could not update settings: ${foundUser}` });
       }
     } catch (e) {
-      res.status(500).send('Passed body invalid');
+      res.status(500).json({ message: 'Passed body invalid' });
     }
   },
 );

@@ -11,7 +11,7 @@ import { getClientByUuid } from '../utils/socket';
 const router = express.Router();
 
 router.post(
-  '/:uuid/alert',
+  '/alert/:uuid',
   checkIsWebhookCorrect,
   checkUserAvailability,
   async (req: Request<{ uuid: string }, any, _Order>, res: Response) => {
@@ -41,18 +41,18 @@ router.post(
           formattedBody.text,
         );
 
-        res.send('ok');
+        res.status(200).json({ message: 'Alert fired successfully' });
       } else {
-        res.status(500).send('Error querying user and file');
+        res.status(404).json({ message: 'Client not found' });
       }
     } catch (e) {
-      res.status(500).send('Error firing alert');
+      res.status(500).json({ message: 'Error firing alert' });
     }
   },
 );
 
 router.post(
-  '/:uuid/test-alert',
+  '/test-alert/:uuid',
   checkUserAvailability,
   async (req: Request<{ uuid: string }>, res: Response) => {
     const uuid = req.params.uuid;
@@ -69,10 +69,10 @@ router.post(
           formattedBody.text,
         );
 
-        res.json({ message: 'Test alert fired' });
+        res.status(200).json({ message: 'Test alert fired successfully' });
       } else {
-        res.status(500).json({
-          message: "Couldn't find socket client",
+        res.status(404).json({
+          message: 'Client not found',
         });
       }
     } catch (e) {
