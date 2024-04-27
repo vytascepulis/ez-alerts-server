@@ -6,6 +6,7 @@ import UtilsRouter from './routes/utils';
 import SettingsRouter from './routes/settings';
 import ProductsRouter from './routes/products';
 import AlertRouter from './routes/alert';
+import UsersRouter from './routes/users';
 import { app } from './server';
 
 dotenv.config();
@@ -20,3 +21,4 @@ app.use(UtilsRouter);
 app.use(SettingsRouter);
 app.use(ProductsRouter);
 app.use(AlertRouter);
+app.use(UsersRouter);
