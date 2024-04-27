@@ -1,12 +1,8 @@
 import express, { Request, Response } from 'express';
-import { IUser, UserModel } from '../models/user';
+import { UserModel } from '../models/user';
 import { FileModel } from '../models/file';
 
 const router = express.Router();
-
-interface BlockRequest<T> extends Request {
-  body: T;
-}
 
 router.get('/users', async (req: Request, res: Response) => {
   try {
@@ -58,11 +54,9 @@ router.post(
       );
 
       if (updatedUser) {
-        res
-          .status(200)
-          .json({
-            message: `User ${body.isBlocked ? 'blocked' : 'unblocked'}`,
-          });
+        res.status(200).json({
+          message: `User ${body.isBlocked ? 'blocked' : 'unblocked'}`,
+        });
       } else {
         res.status(500).json({ message: 'Could not update user' });
       }

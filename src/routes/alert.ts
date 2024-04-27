@@ -14,7 +14,7 @@ router.post(
   '/alert/:uuid',
   checkIsWebhookCorrect,
   checkUserAvailability,
-  async (req: Request<{ uuid: string }, any, _Order>, res: Response) => {
+  async (req: Request<{ uuid: string }, _Order, _Order>, res: Response) => {
     const uuid = req.params.uuid;
 
     try {
