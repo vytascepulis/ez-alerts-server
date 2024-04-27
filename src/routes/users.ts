@@ -12,6 +12,25 @@ router.get('/users', async (req: Request, res: Response) => {
   }
 });
 
+router.delete(
+  '/users/:uuid',
+  async (req: Request<{ uuid: string }>, res: Response) => {
+    const uuid = req.params.uuid;
+
+    try {
+      const deletedUser = await UserModel.findOneAndDelete({ uuid });
+
+      if (deletedUser) {
+        res.status(200).json({ message: 'User deleted' });
+      } else {
+        res.status(500).json({ message: 'Could not delete user' });
+      }
+    } catch (e) {
+      res.status(500).json({ message: 'Error querying users' });
+    }
+  },
+);
+
 router.post(
   '/users/:uuid',
   async (req: Request<{ uuid: string }, IUser, IUser>, res: Response) => {
@@ -47,10 +66,10 @@ router.post(
       if (updatedUser) {
         res.status(200).json({ message: 'User updated' });
       } else {
-        res.status(500).send('Could not update user');
+        res.status(500).json({ message: 'Could not update user' });
       }
     } catch (e) {
-      res.status(500).send('Error querying users');
+      res.status(500).json({ message: 'Error querying users' });
     }
   },
 );
