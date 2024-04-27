@@ -5,22 +5,32 @@ import { createNewFile } from '../models/file';
 
 const router = express.Router();
 
+interface RegisterRequest<T> extends Request {
+  body: T;
+}
+
 router.post(
-  '/:uuid/register',
+  '/register',
   checkUserExistance,
-  async (req: Request, res: Response) => {
+  async (
+    req: RegisterRequest<{ uuid: string; shopDomain: string }>,
+    res: Response,
+  ) => {
     const newUser = createNewUser({
-      uuid: req.params.uuid,
-      shopDomain: 'www.shop.domain',
+      uuid: req.body.uuid,
+      shopDomain: req.body.shopDomain,
     });
+
     const newFile = createNewFile({ uuid: req.params.uuid });
 
     try {
       await newUser.save();
       await newFile.save();
-      res.send(`${newUser.uuid} created`);
+      res
+        .status(200)
+        .json({ message: `${req.body.shopDomain} successfully created` });
     } catch (error) {
-      res.status(500).send(error);
+      res.status(500).json({ message: error });
     }
   },
 );
