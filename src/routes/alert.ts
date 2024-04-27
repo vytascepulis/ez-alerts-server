@@ -5,8 +5,7 @@ import { UserModel } from '../models/user';
 import { FileModel, IFile } from '../models/file';
 import { _Order } from '../types';
 import { formatAlertBody, formatTestAlertBody } from '../utils/alert';
-import { io } from '../server';
-import { getClientByUuid } from '../utils/socket';
+import { activeClients, io } from '../server';
 
 const router = express.Router();
 
@@ -32,14 +31,12 @@ router.post(
         foundFile?.products,
       );
 
-      const client = getClientByUuid(uuid);
+      const socketId = activeClients.find(
+        (client) => client.uuid === uuid,
+      )?.socketId;
 
-      if (client) {
-        io.to(client.socketId).emit(
-          'fire',
-          formattedBody.image,
-          formattedBody.text,
-        );
+      if (socketId) {
+        io.to(socketId).emit('fire', formattedBody.image, formattedBody.text);
 
         res.status(200).json({ message: 'Alert fired successfully' });
       } else {
@@ -60,14 +57,12 @@ router.post(
     try {
       const foundUser = await UserModel.findOne({ uuid }, 'settings').lean();
       const formattedBody = formatTestAlertBody(foundUser?.settings);
-      const client = getClientByUuid(uuid);
+      const socketId = activeClients.find(
+        (client) => client.uuid === uuid,
+      )?.socketId;
 
-      if (client) {
-        io.to(client.socketId).emit(
-          'fire',
-          formattedBody.image,
-          formattedBody.text,
-        );
+      if (socketId) {
+        io.to(socketId).emit('fire', formattedBody.image, formattedBody.text);
 
         res.status(200).json({ message: 'Test alert fired successfully' });
       } else {

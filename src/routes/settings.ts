@@ -6,7 +6,7 @@ import {
   formatGetSettingsFull,
   formatPutSettings,
 } from '../utils/settings';
-import { clients, io } from '../server';
+import { activeClients, io } from '../server';
 
 const router = express.Router();
 
@@ -64,14 +64,12 @@ router.put(
       );
 
       if (foundUser) {
-        const arr = Array.from(clients);
-        const client = arr.find((item) => {
-          const uuidFromSocket = item[1].handshake.query.uuid;
-          return uuid === uuidFromSocket;
-        });
+        const socketId = activeClients.find(
+          (client) => client.uuid === uuid,
+        )?.socketId;
 
-        if (client) {
-          io.to(client[0]).emit(
+        if (socketId) {
+          io.to(socketId).emit(
             'settings',
             formattedSettings.display,
             formattedSettings.text.specialColor,

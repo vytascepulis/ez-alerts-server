@@ -7,10 +7,18 @@ export interface _Error {
   [T: string]: unknown;
 }
 
-export type SocketClient = [
-  string,
-  Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
-];
+export type SocketClient = Socket<
+  DefaultEventsMap,
+  DefaultEventsMap,
+  DefaultEventsMap,
+  any
+>;
+
+export interface ActiveClient {
+  uuid: string;
+  socketId: string;
+  client: SocketClient;
+}
 
 export interface _ClientDetail {
   accept_language?: string;

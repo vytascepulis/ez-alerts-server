@@ -1,15 +1,16 @@
 import express, { Request, Response } from 'express';
 import { UserModel } from '../models/user';
 import { FileModel } from '../models/file';
+import { formatUsers } from '../utils/users';
 
 const router = express.Router();
 
 router.get('/users', async (req: Request, res: Response) => {
   try {
-    const foundUsers = await UserModel.find({});
-    res.send(foundUsers);
+    const foundUsers = await UserModel.find({}).lean();
+    res.send(formatUsers(foundUsers));
   } catch (e) {
-    res.status(500).send('Error querying users');
+    res.status(500).json({ message: 'Error querying users' });
   }
 });
 
