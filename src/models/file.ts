@@ -17,7 +17,11 @@ const fileSchema = new Schema<IFile>({
   products: [{ id: Number, url: String }],
 });
 
-const FileModel = model<IFile>('File', fileSchema, process.env.MONGODB_FILES_COLLECTION);
+const FileModel = model<IFile>(
+  'File',
+  fileSchema,
+  process.env.MONGODB_FILES_COLLECTION,
+);
 
 const createNewFile = ({ uuid }: CreateFileProps) => {
   return new FileModel({

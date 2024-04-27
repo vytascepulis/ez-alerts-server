@@ -10,9 +10,12 @@ const getImage = (
 ) => {
   const useProductImages = settings?.useProductImages;
   const image = settings?.image.base64;
-  const boughtProductImage = products.find((item) => item?.id === productId)?.url;
+  const boughtProductImage = products.find(
+    (item) => item?.id === productId,
+  )?.url;
 
-  const finalImage = useProductImages && boughtProductImage ? boughtProductImage : image;
+  const finalImage =
+    useProductImages && boughtProductImage ? boughtProductImage : image;
 
   return finalImage;
 };

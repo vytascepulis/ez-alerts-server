@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserModel } from '../models/user';
 
-const checkUserExistance = async (req: Request, res: Response, next: NextFunction) => {
+const checkUserExistance = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const uuid = req.params.uuid;
   const exists = Boolean(await UserModel.exists({ uuid }));
   if (exists) {
@@ -11,9 +15,15 @@ const checkUserExistance = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-const checkUserAvailability = async (req: Request, res: Response, next: NextFunction) => {
+const checkUserAvailability = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const uuid = req.params.uuid;
-  const foundUser = await UserModel.findOne({ uuid }).select('isBlocked').lean();
+  const foundUser = await UserModel.findOne({ uuid })
+    .select('isBlocked')
+    .lean();
 
   if (!foundUser) {
     res.status(404).json({ message: 'User not found!' });

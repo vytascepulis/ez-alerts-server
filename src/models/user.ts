@@ -77,7 +77,11 @@ const userSchema = new Schema<IUser>({
   },
 });
 
-const UserModel = model<IUser>('User', userSchema, process.env.MONGODB_USERS_COLLECTION);
+const UserModel = model<IUser>(
+  'User',
+  userSchema,
+  process.env.MONGODB_USERS_COLLECTION,
+);
 
 const createNewUser = ({ uuid, shopDomain }: CreateUserProps) => {
   return new UserModel({

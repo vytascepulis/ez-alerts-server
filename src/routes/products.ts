@@ -10,7 +10,10 @@ type IProducts = IFile['products'];
 router.put(
   '/:uuid/products',
   checkUserAvailability,
-  async (req: Request<{ uuid: string }, IProducts, IProducts>, res: Response) => {
+  async (
+    req: Request<{ uuid: string }, IProducts, IProducts>,
+    res: Response,
+  ) => {
     const uuid = req.params.uuid;
     const products = req.body;
     try {
