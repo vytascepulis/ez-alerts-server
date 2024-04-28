@@ -1,11 +1,7 @@
 import express, { Request, Response } from 'express';
 import { checkUserAvailability } from '../middleware/user';
 import { IUser, UserModel } from '../models/user';
-import {
-  formatGetSettings,
-  formatGetSettingsFull,
-  formatPutSettings,
-} from '../utils/settings';
+import { formatGetSettings, formatSettings } from '../utils/settings';
 import { activeClients, io } from '../server';
 
 const router = express.Router();
@@ -29,23 +25,6 @@ router.get(
   },
 );
 
-router.get(
-  '/settings-full/:uuid',
-  checkUserAvailability,
-  async (req: Request, res: Response) => {
-    const uuid = req.params.uuid;
-    const foundUser = await UserModel.findOne({ uuid })
-      .select('settings')
-      .lean();
-
-    if (foundUser) {
-      res.json(formatGetSettingsFull(foundUser.settings));
-    } else {
-      res.status(500).json({ message: 'Something went wrong' });
-    }
-  },
-);
-
 router.put(
   '/settings/:uuid',
   checkUserAvailability,
@@ -57,7 +36,7 @@ router.put(
     const settings = req.body;
 
     try {
-      const formattedSettings = formatPutSettings(settings);
+      const formattedSettings = formatSettings(settings);
       const foundUser = await UserModel.findOneAndUpdate(
         { uuid },
         { settings: formattedSettings },
