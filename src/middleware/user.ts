@@ -2,14 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import { UserModel } from '../models/user';
 
 const checkUserExistance = async (
-  req: Request,
+  req: Request<unknown, unknown, { shopDomain: string }>,
   res: Response,
   next: NextFunction,
 ) => {
-  const uuid = req.params.uuid;
-  const exists = Boolean(await UserModel.exists({ uuid }));
+  const shopDomain = req.body.shopDomain;
+  const exists = Boolean(await UserModel.exists({ shopDomain }));
   if (exists) {
-    res.status(500).json({ message: 'Uuid already exists!' });
+    res.status(500).json({ message: 'Shop domain already exists!' });
   } else {
     next();
   }

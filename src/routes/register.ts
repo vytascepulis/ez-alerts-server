@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { checkUserExistance } from '../middleware/user';
 import { createNewUser } from '../models/user';
 import { createNewFile } from '../models/file';
+import { v4 as uuidv4 } from 'uuid';
 
 const router = express.Router();
 
@@ -12,16 +13,14 @@ interface RegisterRequest<T> extends Request {
 router.post(
   '/register',
   checkUserExistance,
-  async (
-    req: RegisterRequest<{ uuid: string; shopDomain: string }>,
-    res: Response,
-  ) => {
+  async (req: RegisterRequest<{ shopDomain: string }>, res: Response) => {
+    const uuid = uuidv4();
     const newUser = createNewUser({
-      uuid: req.body.uuid,
+      uuid,
       shopDomain: req.body.shopDomain,
     });
 
-    const newFile = createNewFile({ uuid: req.body.uuid });
+    const newFile = createNewFile({ uuid });
 
     try {
       await newUser.save();
