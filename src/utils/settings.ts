@@ -35,4 +35,10 @@ const formatGetSettings = (settings: IUser['settings']) => ({
   },
 });
 
-export { formatSettings, formatGetSettings };
+const formatSettingsFull = (data: IUser) => ({
+  isBlocked: data.isBlocked,
+  settings: data.settings,
+  uuid: data.uuid,
+});
+
+export { formatSettings, formatGetSettings, formatSettingsFull };

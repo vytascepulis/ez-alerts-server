@@ -1,7 +1,11 @@
 import express, { Request, Response } from 'express';
 import { checkUserAvailability } from '../middleware/user';
 import { IUser, UserModel } from '../models/user';
-import { formatGetSettings, formatSettings } from '../utils/settings';
+import {
+  formatGetSettings,
+  formatSettings,
+  formatSettingsFull,
+} from '../utils/settings';
 import { activeClients, io } from '../server';
 
 const router = express.Router();
@@ -21,6 +25,22 @@ router.get(
       res.json(formatGetSettings(foundUser.settings));
     } else {
       res.status(500).json({ message: 'Something went wrong' });
+    }
+  },
+);
+
+router.get(
+  '/settings-full/:shopDomain',
+  async (req: Request, res: Response) => {
+    const shopDomain = req.params.shopDomain;
+    const foundUser = await UserModel.findOne({
+      shopDomain,
+    });
+
+    if (foundUser) {
+      res.json(formatSettingsFull(foundUser));
+    } else {
+      res.status(404).json({ message: 'User not found' });
     }
   },
 );
