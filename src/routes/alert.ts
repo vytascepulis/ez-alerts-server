@@ -57,12 +57,12 @@ router.post(
     try {
       const foundUser = await UserModel.findOne({ uuid }, 'settings').lean();
       const formattedBody = formatTestAlertBody(foundUser?.settings);
-      const socketId = activeClients.find(
-        (client) => client.uuid === uuid,
-      )?.socketId;
+      const socketIds = activeClients
+        .filter((client) => client.uuid === uuid)
+        .map((client) => client.socketId);
 
-      if (socketId) {
-        io.to(socketId).emit('fire', formattedBody.image, formattedBody.text);
+      if (socketIds.length) {
+        io.to(socketIds).emit('fire', formattedBody.image, formattedBody.text);
 
         res.status(200).json({ message: 'Test alert fired successfully' });
       } else {
