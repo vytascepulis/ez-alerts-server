@@ -7,9 +7,14 @@ const isActive = (uuid: string) => {
 
 export const formatUsers = (users: IUser[]) => {
   return users.map((user: IUser) => {
+    const activeSockets = activeClients
+      .filter((client) => client.uuid === user.uuid)
+      .map((client) => client.socketId);
+
     return {
       ...user,
       isActive: isActive(user.uuid),
+      activeClients: activeSockets,
     };
   });
 };
