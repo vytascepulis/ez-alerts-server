@@ -11,10 +11,12 @@ const formatSettings = (settings: IUser['settings']) => ({
     animationOut: settings.display.animationOut,
   },
   audio: {
+    fileName: settings.audio.fileName,
     volume: settings.audio.volume,
     base64: settings.audio.base64,
   },
   image: {
+    fileName: settings.image.fileName,
     base64: settings.image.base64,
   },
   useProductImages: settings.useProductImages,
