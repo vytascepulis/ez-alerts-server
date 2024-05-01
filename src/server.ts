@@ -21,19 +21,27 @@ let activeClients: ActiveClient[] = [];
 
 io.on('connection', (socket) => {
   const uuidFromSocket = socket.handshake.query.uuid as string;
-  console.log('Connected: ', uuidFromSocket);
-
   activeClients.push({
     uuid: uuidFromSocket,
     socketId: socket.id,
     client: socket,
   });
 
-  socket.on('disconnect', () => {
-    console.log('Disconnected: ', uuidFromSocket);
+  console.log('Connected: ', uuidFromSocket);
+  console.log(
+    'Active: ',
+    activeClients.map((c) => c.socketId),
+  );
 
+  socket.on('disconnect', () => {
     activeClients = activeClients.filter(
-      (client) => client.uuid !== uuidFromSocket,
+      (client) => client.socketId !== socket.id,
+    );
+
+    console.log('Disconnected: ', uuidFromSocket);
+    console.log(
+      'Active: ',
+      activeClients.map((c) => c.socketId),
     );
   });
 });
