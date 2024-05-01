@@ -25,9 +25,14 @@ router.post(
     try {
       await newUser.save();
       await newFile.save();
-      res
-        .status(200)
-        .json({ message: `${req.body.shopDomain} successfully created` });
+      res.status(200).json({
+        message: `${req.body.shopDomain} successfully created`,
+        data: {
+          isBlocked: newUser.isBlocked,
+          uuid,
+          settings: newUser.settings,
+        },
+      });
     } catch (error) {
       res.status(500).json({ message: error });
     }
